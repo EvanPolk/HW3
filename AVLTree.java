@@ -342,10 +342,7 @@ class LUC_AVLTree {
      */
 
     private Node deleteElement(int value, Node node) {
-
         /*
-         * ADD CODE HERE
-         * 
          * NOTE, that you should use the existing coded private methods
          * in this file, which include:
          *      - minValueNode,
@@ -361,9 +358,29 @@ class LUC_AVLTree {
          * code for each. You can also look at the method InsertElement, as it has do
          * do many of the same things as this method.
          */
+        if (node == null) {
+            return null;
+        }
 
+        if (node.value < value) {
+            node.rightChild = deleteElement(value, node.rightChild);
+            int bf = getBalanceFactor(node.rightChild);
+        } else if (node.value > value) {
+            node.leftChild = deleteElement(value, node.leftChild);
+        } else { // we found the value
+            if (node.leftChild == null) {
+                return node.rightChild;
+            } else if (node.rightChild == null) {
+                return node.leftChild;
+            } else {
+                Node min = minValueNode(node.rightChild);
+                node.value = min.value;
+                node.rightChild = deleteElement(node.value, node.rightChild);
+            }
+        }
         return node;
     }
+
 
 
     /**
