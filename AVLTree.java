@@ -364,9 +364,44 @@ class LUC_AVLTree {
 
         if (node.value < value) {
             node.rightChild = deleteElement(value, node.rightChild);
-            int bf = getBalanceFactor(node.rightChild);
+
+            // We have to do rotations from a parent node
+            int parentBf = getBalanceFactor(node.rightChild);
+            if (parentBf > 1) {
+                int leftBf = getBalanceFactor(node.rightChild.leftChild);
+                if (leftBf >= 0) {
+                    node.rightChild = LLRotation(node.rightChild);
+                } else {
+                    node.rightChild = LRRotation(node.rightChild);
+                }
+            } else if (parentBf < -1) {
+                int rightBf = getBalanceFactor(node.rightChild.rightChild);
+                if (rightBf >= 0) {
+                    node.rightChild = RLRotation(node.rightChild);
+                } else {
+                    node.rightChild = RRRotation(node.rightChild);
+                }
+            }
         } else if (node.value > value) {
             node.leftChild = deleteElement(value, node.leftChild);
+
+            int parentBf = getBalanceFactor(node.leftChild);
+            if (parentBf > 1) {
+                int leftBf = getBalanceFactor(node.leftChild.leftChild);
+                if (leftBf >= 0) {
+                    node.leftChild = LLRotation(node.leftChild);
+                } else {
+                    node.leftChild = LRRotation(node.leftChild);
+                }
+            } else if (parentBf < -1) {
+                int rightBf = getBalanceFactor(node.leftChild.rightChild);
+                if (rightBf >= 0) {
+                    node.leftChild = RLRotation(node.leftChild);
+                } else {
+                    node.leftChild = RRRotation(node.leftChild);
+                }
+            }
+            node.height = getMaxHeight(getHeight(node.leftChild), getHeight(node.rightChild));
         } else { // we found the value
             if (node.leftChild == null) {
                 return node.rightChild;
