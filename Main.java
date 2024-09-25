@@ -75,6 +75,7 @@ public class Main {
         tree.delete(50);
         treeContents = tree.preorderTraversal();
         if ( ! avlErrorFlag && ! treeContents.toString().equals("53 10 5 25 55 60 ") ) {
+            System.out.println(treeContents.toString());
             System.out.println("AVL TEST 1 - Failure (4): deleting root failed!");
             avlErrorFlag = true;
         }
