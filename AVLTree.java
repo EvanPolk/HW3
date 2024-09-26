@@ -1,6 +1,6 @@
 
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Evan Polk / Section 002 ***
  *
  * This java file is a Java object implementing simple AVL Tree.
  * You are to complete the deleteElement method.
@@ -11,6 +11,7 @@ import java.lang.Math;
 
 
 /**
+ * 
  *  Class: Node
  *
  *  This class represents an inner node of the AVL Tree. Additional candidate  
