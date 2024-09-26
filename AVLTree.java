@@ -342,68 +342,18 @@ class LUC_AVLTree {
      */
 
     private Node deleteElement(int value, Node node) {
-        /*
-         * NOTE, that you should use the existing coded private methods
-         * in this file, which include:
-         *      - minValueNode,
-         *      - getMaxHeight,
-         *      - getHeight,
-         *      - getBalanceFactor,
-         *      - LLRotation
-         *      - RRRotation,
-         *      - LRRotation,
-         *      - RLRotation.
-         *
-         * To understand what each of these methods do, see the method prologues and
-         * code for each. You can also look at the method InsertElement, as it has do
-         * do many of the same things as this method.
-         */
         if (node == null) {
-            return null;
+            return node;
         }
 
         if (node.value < value) {
             node.rightChild = deleteElement(value, node.rightChild);
-
-            // We have to do rotations from a parent node
-            int parentBf = getBalanceFactor(node.rightChild);
-            if (parentBf > 1) {
-                int leftBf = getBalanceFactor(node.rightChild.leftChild);
-                if (leftBf >= 0) {
-                    node.rightChild = LLRotation(node.rightChild);
-                } else {
-                    node.rightChild = LRRotation(node.rightChild);
-                }
-            } else if (parentBf < -1) {
-                int rightBf = getBalanceFactor(node.rightChild.rightChild);
-                if (rightBf >= 0) {
-                    node.rightChild = RLRotation(node.rightChild);
-                } else {
-                    node.rightChild = RRRotation(node.rightChild);
-                }
-            }
         } else if (node.value > value) {
             node.leftChild = deleteElement(value, node.leftChild);
-
-            int parentBf = getBalanceFactor(node.leftChild);
-            if (parentBf > 1) {
-                int leftBf = getBalanceFactor(node.leftChild.leftChild);
-                if (leftBf >= 0) {
-                    node.leftChild = LLRotation(node.leftChild);
-                } else {
-                    node.leftChild = LRRotation(node.leftChild);
-                }
-            } else if (parentBf < -1) {
-                int rightBf = getBalanceFactor(node.leftChild.rightChild);
-                if (rightBf >= 0) {
-                    node.leftChild = RLRotation(node.leftChild);
-                } else {
-                    node.leftChild = RRRotation(node.leftChild);
-                }
-            }
-            node.height = getMaxHeight(getHeight(node.leftChild), getHeight(node.rightChild));
-        } else { // we found the value
-            if (node.leftChild == null) {
+        } else {
+            if (node.leftChild == null && node.rightChild == null) {
+                node = null;
+            } else if (node.leftChild == null) {
                 return node.rightChild;
             } else if (node.rightChild == null) {
                 return node.leftChild;
@@ -412,6 +362,22 @@ class LUC_AVLTree {
                 node.value = min.value;
                 node.rightChild = deleteElement(node.value, node.rightChild);
             }
+        }
+
+        if (node == null) {
+            return node;
+        }
+        node.height = getMaxHeight(getHeight(node.leftChild), getHeight(node.rightChild)) + 1;
+
+        int parentBalanceFactor = getBalanceFactor(node);
+        if (parentBalanceFactor > 1 && getBalanceFactor(node.leftChild) >= 0) {
+            node = LLRotation(node);
+        } else if (parentBalanceFactor > 1 && getBalanceFactor(node.leftChild) < 0) {
+            node = LRRotation(node);
+        } else if (parentBalanceFactor < -1 && getBalanceFactor(node.rightChild) >= 0) {
+            node = RLRotation(node);
+        } else if (parentBalanceFactor < -1 && getBalanceFactor(node.rightChild) < 0) {
+            node = RRRotation(node);
         }
         return node;
     }
